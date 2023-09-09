@@ -1,0 +1,54 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: nzuguem-k8s-compliance-policies-validating-external
+webhooks:
+- name: image-policy.nzuguem.me
+  rules:
+  - apiGroups:
+    - apps
+    apiVersions:
+    - v1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - deployments
+    scope: Namespaced
+  clientConfig:
+    url: https://host.minikube.internal:8443/validations/images
+    caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUN6RENDQWJTZ0F3SUJBZ0lKQU43SUtqVjluQW9ETUEwR0NTcUdTSWIzRFFFQkN3VUFNQkl4RURBT0JnTlYKQkFvTUIyNTZkV2QxWlcwd0hoY05Nak13T1RBNE1UVTFOalEwV2hjTk16TXdPVEExTVRVMU5qUTBXakFTTVJBdwpEZ1lEVlFRS0RBZHVlblZuZFdWdE1JSUJJakFOQmdrcWhraUc5dzBCQVFFRkFBT0NBUThBTUlJQkNnS0NBUUVBCnFhYWEzdmRxWTFGaGNJYkVCdlFpTnR5MThvWUhUditqM1FLM0pCSDFBaFZ1RW1ZY0pEeGwwd3dzV2psWndhY0sKaTk0QzQrWm93bkVEeVpoN2RPb3M4WG4zS0FuaEtJZldiSEpoOSt4NEVFWStQcW5DYm9NMVd1RktSK24zS08xZwpQYzlwemJITmlvOHAwMDlrZXE5K09NYzdVNGwvRG43VDB0dFR1UkoxUktvZEsrU1FtdGxUWjRRL0c5NEV4Snp5ClBwWVQ4Q2pNRS9vM1NKY3RkUWdFMFMwOCtwN3ArZDIxRmtyN09aWGJkaHpFYUdJRGYzRlRBRmtqZGhLYmJVWVYKUE5uVWYvREhybGhYbmhzYStRYW5FOGVQNVJxQW5BYUZtejBUbUJyWEV3Mm9GN2o4ZTdDNmdnRGE4dUtSVjFqcgptemJOc1diUjlzWm92dzNXazBCSGh3SURBUUFCb3lVd0l6QWhCZ05WSFJFRUdqQVlnaFpvYjNOMExtMXBibWxyCmRXSmxMbWx1ZEdWeWJtRnNNQTBHQ1NxR1NJYjNEUUVCQ3dVQUE0SUJBUUEvemI0aW1aT3p0aE0rUUd3Y3djc3MKc0dxNVI1ajB2dXQ4Q0FKQzd2Qlk4dndBT3RaVmJsRTVuWU90Mm9vV3phTWtLYS9yUHBSMGdNenljRkhtQk52ZwplZVBVNi8wUm5xV213LzZRN1JhMko1LzUxUXduMzdCOWwwektheW5PRnhTMEdkMllFc01ka21IRUk2Z3c4cmJuCmRRRXNOSHZzNXZrRUM4b3IvUnIvUnUwV1RjYkpsc1lUaEs4VGJEVFZ4dWZRdjRhdVphRjk3WkZGdVdVUm5pTU0KMTY4eG1qa21VODVTZUsxeWw3MzRrWkNvVzdRSWtXbEVjQ3VHRXNzN1hPL3JKNmlEVjJXNW8vNW9uNmhwU0I5MwprWGttbCswREdhYk8wK3Rid2dsZnIrc2x0V1Z2MVVtSVRad2xmbkZWV2J3dVJBZXIxNGFzN2QwOVRkK09wUjlkCi0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+  admissionReviewVersions:
+  - v1
+  - v1beta1
+  sideEffects: None
+  namespaceSelector:
+    matchLabels:
+      validating-webhook: enabled
+- name: labels-policy.nzuguem.me
+  rules:
+    - apiGroups:
+      - ""
+      - apps
+      - networking.k8s.io
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+      - deployments
+      - services
+      - ingresses
+      scope: Namespaced
+  clientConfig:
+    url: https://host.minikube.internal:8443/validations/labels
+    caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUN6RENDQWJTZ0F3SUJBZ0lKQU43SUtqVjluQW9ETUEwR0NTcUdTSWIzRFFFQkN3VUFNQkl4RURBT0JnTlYKQkFvTUIyNTZkV2QxWlcwd0hoY05Nak13T1RBNE1UVTFOalEwV2hjTk16TXdPVEExTVRVMU5qUTBXakFTTVJBdwpEZ1lEVlFRS0RBZHVlblZuZFdWdE1JSUJJakFOQmdrcWhraUc5dzBCQVFFRkFBT0NBUThBTUlJQkNnS0NBUUVBCnFhYWEzdmRxWTFGaGNJYkVCdlFpTnR5MThvWUhUditqM1FLM0pCSDFBaFZ1RW1ZY0pEeGwwd3dzV2psWndhY0sKaTk0QzQrWm93bkVEeVpoN2RPb3M4WG4zS0FuaEtJZldiSEpoOSt4NEVFWStQcW5DYm9NMVd1RktSK24zS08xZwpQYzlwemJITmlvOHAwMDlrZXE5K09NYzdVNGwvRG43VDB0dFR1UkoxUktvZEsrU1FtdGxUWjRRL0c5NEV4Snp5ClBwWVQ4Q2pNRS9vM1NKY3RkUWdFMFMwOCtwN3ArZDIxRmtyN09aWGJkaHpFYUdJRGYzRlRBRmtqZGhLYmJVWVYKUE5uVWYvREhybGhYbmhzYStRYW5FOGVQNVJxQW5BYUZtejBUbUJyWEV3Mm9GN2o4ZTdDNmdnRGE4dUtSVjFqcgptemJOc1diUjlzWm92dzNXazBCSGh3SURBUUFCb3lVd0l6QWhCZ05WSFJFRUdqQVlnaFpvYjNOMExtMXBibWxyCmRXSmxMbWx1ZEdWeWJtRnNNQTBHQ1NxR1NJYjNEUUVCQ3dVQUE0SUJBUUEvemI0aW1aT3p0aE0rUUd3Y3djc3MKc0dxNVI1ajB2dXQ4Q0FKQzd2Qlk4dndBT3RaVmJsRTVuWU90Mm9vV3phTWtLYS9yUHBSMGdNenljRkhtQk52ZwplZVBVNi8wUm5xV213LzZRN1JhMko1LzUxUXduMzdCOWwwektheW5PRnhTMEdkMllFc01ka21IRUk2Z3c4cmJuCmRRRXNOSHZzNXZrRUM4b3IvUnIvUnUwV1RjYkpsc1lUaEs4VGJEVFZ4dWZRdjRhdVphRjk3WkZGdVdVUm5pTU0KMTY4eG1qa21VODVTZUsxeWw3MzRrWkNvVzdRSWtXbEVjQ3VHRXNzN1hPL3JKNmlEVjJXNW8vNW9uNmhwU0I5MwprWGttbCswREdhYk8wK3Rid2dsZnIrc2x0V1Z2MVVtSVRad2xmbkZWV2J3dVJBZXIxNGFzN2QwOVRkK09wUjlkCi0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+  admissionReviewVersions:
+  - v1
+  - v1beta1
+  sideEffects: None
+  namespaceSelector:
+    matchLabels:
+      validating-webhook: enabled

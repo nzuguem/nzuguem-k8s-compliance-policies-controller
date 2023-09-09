@@ -1,0 +1,36 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: nzuguem-k8s-compliance-policies-mutating-internal
+webhooks:
+- name: labels-enrichment.nzuguem.me
+  rules:
+  - apiGroups:
+    - ""
+    - apps
+    - networking.k8s.io
+    apiVersions:
+    - v1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - pods
+    - deployments
+    - services
+    - ingresses
+    scope: Namespaced
+  clientConfig:
+    service:
+      name: nzuguem-k8s-compliance-policies-controller
+      namespace: compliance-policies-system
+      path: /mutations/labels
+      port: 443
+    caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUMvekNDQWVlZ0F3SUJBZ0lKQVBqMklveHJoYzdHTUEwR0NTcUdTSWIzRFFFQkN3VUFNQkl4RURBT0JnTlYKQkFvTUIyNTZkV2QxWlcwd0hoY05Nak13T1RBNE1UWTFOalF3V2hjTk16TXdPVEExTVRZMU5qUXdXakFTTVJBdwpEZ1lEVlFRS0RBZHVlblZuZFdWdE1JSUJJakFOQmdrcWhraUc5dzBCQVFFRkFBT0NBUThBTUlJQkNnS0NBUUVBCnhvNTRMaUNTSHZ1YWg0Y3RyZHlQSE1MK2F1MW9XckJTNE1yUy9zOFV6VFE3cXpSSlBoK0liRUI5QzJrU3ZjOU4KNzBLNEk2bnlvMnRNc24xSVYvRTdkeHJSOEgyWHpVc0Q4RDkzR3dwTGVYL1FQU0l5R2RKSk1FOVI0c3ExejYybgozZmh5QWMxYnFES3ZjQlZwcUVNV3NJdzEvam1WUlh3Tnh1Vm5ObHZCclVWditOQTl0aGpqQmlIV1Z5VEVFUFQxClRhN3JPbXh4VGRhU1MxYytHZ2hHVXhtRTVmaVFWSFJTRTBOR1RmN2ZLbVFPQWdtMGM3R0lxei9BTFo0dVo4V2sKUU94bzA4MWtJZHVRZ0docnpCVXF4emhJRlF0RXpmZUgwVU9aMCtLREM4R3NtZTh4cy9QNkZmRml2UEU2S1lSZAppOGUvRGtmVG5lQWZDWmtveHFwV3F3SURBUUFCbzFnd1ZqQlVCZ05WSFJFRVRUQkxna2x1ZW5WbmRXVnRMV3M0CmN5MWpiMjF3YkdsaGJtTmxMWEJ2YkdsamFXVnpMV052Ym5SeWIyeHNaWEl1WTI5dGNHeHBZVzVqWlMxd2IyeHAKWTJsbGN5MXplWE4wWlcwdWMzWmpNQTBHQ1NxR1NJYjNEUUVCQ3dVQUE0SUJBUUNVRE9LOHZCcjlEMDM4d3lyeApsNmcrWjZiS2dZdVVwa20yVDUrWmhqTUVOY2NpTE5DZXB2Z1k3YnZZYlU1WjZmWFpqWnBaZ1NJK3dVdTFLRmkwCjB0b3BiZHY5aktxN2VYbThWY1RyN05WQzZSTXM3UUpPTzd0UVNpb0pDVTdCb0ZWa3lMb1d2SlkvWjVCcFhBR2QKQncwWEFZUVVFcnp4T3pRSFprdUhLMXZsRERNdUpZZENiaFNFdzZEZkMwLzVRdFRwbE5kZ0cySFQrOWxPcXFmSgpjdXlrNTlTRW5sZWhoTTJhZmdQNEZpMkpxWWZ1OGlqaHNsRWhqUWlQYWxtajV3WkVGa2hDZVlYR1FnYWpkR255CnhNVkR2VDh1ck95SzRlNmtPVUVWUzFUTk5oK2hZVlBTMmZBNmF6R3RoVmdvTCtRb2VqK2pOd29SZFFhNzhjYisKNm4wawotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+  admissionReviewVersions:
+  - v1
+  - v1beta1
+  sideEffects: None
+  namespaceSelector:
+    matchLabels:
+      mutating-webhook: enabled
