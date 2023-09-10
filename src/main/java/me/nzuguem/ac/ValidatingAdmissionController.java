@@ -34,7 +34,7 @@ public class ValidatingAdmissionController {
         var deployment = (Deployment) admissionReview.getRequest().getObject();
         var containers = deployment.getSpec().getTemplate().getSpec().getContainers();
 
-        var allowed = this.validateContainerImages(containers);
+        var allowed = this.noneMatchWithLatestImage(containers);
 
         return new AdmissionReviewBuilder()
                 .withResponse(
@@ -45,7 +45,7 @@ public class ValidatingAdmissionController {
                 ).build();
     }
 
-    private boolean validateContainerImages(List<Container> containers) {
+    private boolean noneMatchWithLatestImage(List<Container> containers) {
         var patternLatestImage = Pattern.compile("^(.*:latest$|[^:]+)$");
 
         return containers.stream()
@@ -60,7 +60,7 @@ public class ValidatingAdmissionController {
 
         var k8sResource =  (HasMetadata) admissionReview.getRequest().getObject();
 
-        var allowed = this.validateLabels(k8sResource.getMetadata().getLabels());
+        var allowed = this.isContainTeamLabel(k8sResource.getMetadata().getLabels());
 
         return new AdmissionReviewBuilder()
                 .withResponse(
@@ -71,7 +71,7 @@ public class ValidatingAdmissionController {
                 ).build();
     }
 
-    private boolean validateLabels(Map<String, String> labels) {
+    private boolean isContainTeamLabel(Map<String, String> labels) {
 
         return labels.containsKey("team") &&
                 Objects.nonNull(labels.get("team")) &&

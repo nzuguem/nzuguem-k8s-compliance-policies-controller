@@ -41,9 +41,7 @@ public class MutatingAdmissionController {
 
         var mutated = this.k8sResourceToJson(k8sResource);
 
-        var patch = Json.createDiff(original, mutated).toString();
-
-        var encoded = Base64.getEncoder().encodeToString(patch.getBytes());
+        var encodedDiff = this.encodeDiffFromJsonObjects(original, mutated);
 
         return new AdmissionReviewBuilder()
                 .withResponse(
@@ -51,7 +49,7 @@ public class MutatingAdmissionController {
                                 .withAllowed()
                                 .withUid(admissionReview.getRequest().getUid())
                                 .withPatchType("JSONPatch")
-                                .withPatch(encoded)
+                                .withPatch(encodedDiff)
                                 .build()
                 ).build();
     }
@@ -74,5 +72,12 @@ public class MutatingAdmissionController {
         try (var jsonReader = Json.createReader(new StringReader(k8ResourceJsonString))){
             return jsonReader.readObject();
         }
+    }
+
+    private String encodeDiffFromJsonObjects(JsonObject original, JsonObject mutated) {
+
+        var patch = Json.createDiff(original, mutated).toString();
+
+        return Base64.getEncoder().encodeToString(patch.getBytes());
     }
 }
