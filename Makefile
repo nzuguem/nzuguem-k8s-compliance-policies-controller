@@ -4,11 +4,7 @@ help: ## Display this help.
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_0-9-]+:.*?##/ { printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
 
 generate-certificate-for-dev: ## Generate certificate for development properties
-	@openssl req -x509 -newkey rsa:2048 -keyout src/main/resources/nzuguem-compliance-policies-controller.key \
-            -out src/main/resources/nzuguem-compliance-policies-controller.crt -days 3650 -nodes -subj "/O=nzuguem" \
-            -addext "subjectAltName = DNS:host.minikube.internal"
-	@cat src/main/resources/nzuguem-compliance-policies-controller.crt | base64 > .caBundle
-	@echo "Copy the contents of .caBundle and define the caBundle in k8s/*-external.yml"
+	@./k8s/generate-and-set-ca-bundle.sh "host.minikube.internal" "src/main/resources" "external"
 
 deploy-external-webhook-configuration-for-dev: undeploy-internal-webhook-configuration ## Deploy webhook configuration, who bind on local application in development
 	@kubectl apply -f k8s/nzuguem-k8s-compliance-policies-validating-external.yml
@@ -50,14 +46,10 @@ deploy-internal-webhook-configuration: undeploy-external-webhook-configuration-f
 	@kubectl apply -f k8s/nzuguem-k8s-compliance-policies-mutating-internal.yml
 
 generate-certificate-on-minikube-for-deploy-controller: ## Generate & Create secret for controller on minikube
-	@openssl req -x509 -newkey rsa:2048 -keyout nzuguem-compliance-policies-controller.key \
-			-out nzuguem-compliance-policies-controller.crt -days 3650 -nodes -subj "/O=nzuguem" \
-			-addext "subjectAltName = DNS:nzuguem-k8s-compliance-policies-controller.compliance-policies-system.svc"
+	@./k8s/generate-and-set-ca-bundle.sh "nzuguem-k8s-compliance-policies-controller.compliance-policies-system.svc" "./" "internal"
 	@kubectl get ns | grep  -q "^compliance-policies-system" || kubectl create ns compliance-policies-system
 	@kubectl create secret tls nzuguem-k8s-compliance-policies-controller-secret --key nzuguem-compliance-policies-controller.key \
             --cert nzuguem-compliance-policies-controller.crt -n compliance-policies-system
-	@kubectl get secret/nzuguem-k8s-compliance-policies-controller-secret -n compliance-policies-system -o jsonpath='{.data.tls\.crt}' > .caBundle
-	@echo "Copy the contents of .caBundle and define the caBundle in k8s/*-internal.yml"
 
 delete-ns-on-minikube-from-deploy-controller: undeploy-controller-from-minikube ## Delete namespace containing all controller ressources
 	@kubectl delete -n compliance-policies-system secret/nzuguem-k8s-compliance-policies-controller-secret || echo

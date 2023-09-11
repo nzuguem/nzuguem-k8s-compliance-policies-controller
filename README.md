@@ -27,7 +27,6 @@ Considerations :
 ```bash
 make generate-certificate-for-dev
 ```
-> ⚠️ Don't forget to replace the `caBundle` in k8s/*-external.yml with the contents of the _.caBundle_ file.
 
 - Deploy webhook configuration, who bind on local application in development mode
 ```bash
@@ -75,7 +74,6 @@ make dry-run-bad-image-manifest
 ```bash
 make generate-certificate-on-minikube-for-deploy-controller
 ```
-> ⚠️ Don't forget to replace the `caBundle` in k8s/*-internal.yml with the contents of the _.caBundle_ file.
 
 - Deploy the webhook configuration, the one that links to the kubernetes service linked to the controller
 ```bash
