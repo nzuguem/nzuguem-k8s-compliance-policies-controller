@@ -117,10 +117,13 @@ make delete-ns-on-minikube-from-test
 # Delete docker image of controller
 make delete-image-docker-of-controller
 ```
-# Alternative 🙂
+# Alternatives 🙂
 As we can see, Admissions webhooks require you to develop your own Controller, which wasn't very accessible 😓.
 
-Luckily for us, [Gatekeeper and OPA][gatekeeper-opa-doc] will take care of that for us.
+Luckily for us, We have several alternatives :
+- [Gatekeeper and OPA][gatekeeper-opa-doc]
+- [Kyverno][kyverno-doc]
+- [Kubernetes Validating Admission Policy][k8s-validating-admission-policy-doc] -> In alpha version since 1.26 and in beta since 1.28. May require activation on the API Server
 # Useful links 🔗
 - [Quarkus][quarkus-doc]
 - [Admission controllers][admission-controllers-doc]
@@ -133,4 +136,5 @@ Luckily for us, [Gatekeeper and OPA][gatekeeper-opa-doc] will take care of that 
 [sdkman-doc]: https://sdkman.io/
 [minikube-install]: https://minikube.sigs.k8s.io/docs/start/
 [gatekeeper-opa-doc]: https://open-policy-agent.github.io/gatekeeper/website/docs/
-
+[kyverno-doc]: https://kyverno.io/docs/introduction/#quick-start
+[k8s-validating-admission-policy-doc]: https://kubernetes.io/docs/reference/access-authn-authz/validating-admission-policy/

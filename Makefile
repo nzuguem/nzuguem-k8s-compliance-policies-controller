@@ -46,7 +46,7 @@ deploy-internal-webhook-configuration: undeploy-external-webhook-configuration-f
 	@kubectl apply -f k8s/nzuguem-k8s-compliance-policies-mutating-internal.yml
 
 generate-certificate-on-minikube-for-deploy-controller: ## Generate & Create secret for controller on minikube
-	@./k8s/generate-and-set-ca-bundle.sh "nzuguem-k8s-compliance-policies-controller.compliance-policies-system.svc" "./" "internal"
+	@./k8s/generate-and-set-ca-bundle.sh "nzuguem-k8s-compliance-policies-controller.compliance-policies-system.svc" "." "internal"
 	@kubectl get ns | grep  -q "^compliance-policies-system" || kubectl create ns compliance-policies-system
 	@kubectl create secret tls nzuguem-k8s-compliance-policies-controller-secret --key nzuguem-compliance-policies-controller.key \
             --cert nzuguem-compliance-policies-controller.crt -n compliance-policies-system
