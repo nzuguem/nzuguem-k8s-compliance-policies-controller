@@ -41,6 +41,11 @@ public class ValidatingAdmissionController {
                         new AdmissionResponseBuilder()
                                 .withAllowed(allowed)
                                 .withUid(admissionReview.getRequest().getUid())
+                                .withStatus(
+                                        new StatusBuilder()
+                                                .withReason("Container images must not be tagged with <<latest>>")
+                                                .build()
+                                )
                                 .build()
                 ).build();
     }
@@ -67,6 +72,11 @@ public class ValidatingAdmissionController {
                         new AdmissionResponseBuilder()
                                 .withAllowed(allowed)
                                 .withUid(admissionReview.getRequest().getUid())
+                                .withStatus(
+                                        new StatusBuilder()
+                                                .withReason("All resources or objects to be created or modified must belong to a team (the <<team>> label is mandatory)")
+                                                .build()
+                                )
                                 .build()
                 ).build();
     }
